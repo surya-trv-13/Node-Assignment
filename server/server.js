@@ -14,15 +14,16 @@ var port = process.env.PORT;
 app.use(bodyParser.json());  //Use to parse the middleware request into object
 
 // -----------------------------------------------------------------------------
+// POST /users
 app.post('/users', (req,res) => {
-  var userModel = req.body.intrests;
+  var userModel = req.body.interests;
   var user = new Users({
     name : req.body.name,
     email : req.body.email,
     phone : req.body.phone,
     designation : req.body.designation,
     address : req.body.address,
-    intrests : req.body.intrests
+    interests : req.body.interests
   });
 
 
@@ -34,7 +35,7 @@ app.post('/users', (req,res) => {
 });
 
 // -----------------------------------------------------------------------------
-
+// DELETE /users/:id
 app.delete('/users/:id',(req,res) => {
   var id = req.params.id;
 
@@ -52,9 +53,10 @@ app.delete('/users/:id',(req,res) => {
   })
 });
 // ----------------------------------------------------------------------------
+// PATCH /users/:id
 app.patch('/users/:id',(req,res) => {
   var id = req.params.id;
-  var body = _.pick(req.body,['name','email','phone','designation','address','intrests']);
+  var body = _.pick(req.body,['name','email','phone','designation','address','interests']);
 
   if(!ObjectID.isValid(id)){
     return res.status(404).send();
@@ -69,6 +71,19 @@ app.patch('/users/:id',(req,res) => {
     res.status(400).send(e);
   });
 });
+// ----------------------------------------------------------------------------
+// API for getting all the users who have interests
+app.get('/user/coding',(req,res) => {
+  Users.find({interests : {$all : ['Coding']}}).then((userModel) => {
+    if(!userModel){
+      res.status(404).send();
+    }
+    res.status(200).send(userModel);
+  }).catch((e) => {
+    res.status(400).send();
+  });
+});
+
 
 app.listen(port,() => {
   console.log(`Connected to port ${port}`);

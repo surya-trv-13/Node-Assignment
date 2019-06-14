@@ -36,7 +36,7 @@ var UserSchema = new Schema({
     type: String,
     required : true
   },
-  intrests : {
+  interests : {
       type : Array,
       default : 'somethings',
       required : true
